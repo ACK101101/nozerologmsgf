@@ -1,8 +1,6 @@
 module github.com/ACK101101/nozerologmsgf
 
-go 1.23.0
-
-toolchain go1.23.6
+go 1.22.0
 
 require golang.org/x/tools v0.30.0
 

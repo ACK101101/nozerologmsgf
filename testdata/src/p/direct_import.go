@@ -5,9 +5,9 @@ import "github.com/rs/zerolog"
 func direct_example() {
 	logger := zerolog.New(nil)
 	// This should trigger our custom linter
-	logger.Error().Msgf("This is a formatted error message %s", "test")                                        // want "Do not use zerolog.Msgf after Error(), use Msg() instead; Include extra context via Event fields"
-	logger.Error().Str("key", "value").Msgf("This is a formatted error message %s", "test")                    // want "Do not use zerolog.Msgf after Error(), use Msg() instead; Include extra context via Event fields"
-	logger.Error().Str("key", "value").Bool("bool", true).Msgf("This is a formatted error message %s", "test") // want "Do not use zerolog.Msgf after Error(), use Msg() instead; Include extra context via Event fields"
+	logger.Error().Msgf("This is a formatted error message %s", "test")                                        // want "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
+	logger.Error().Str("key", "value").Msgf("This is a formatted error message %s", "test")                    // want "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
+	logger.Error().Str("key", "value").Bool("bool", true).Msgf("This is a formatted error message %s", "test") // want "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
 
 	// These should be fine
 	logger.Error().Msg("This is a regular error message")
