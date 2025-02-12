@@ -7,15 +7,17 @@ import (
 	"golang.org/x/tools/go/analysis"
 )
 
+var ErrorMsg = "Do not use zerolog .Msgf after zerolog .Error; include extra info in Event fields"
+
 // Imported by a main package and function to be compiled and used by golangci-lint.
-var MsgfLintAnalyzer = &analysis.Analyzer{
-	Name: "msgf_lint",
-	Doc:  "reports zerolog.Msgf usage after Error()",
+var Analyzer = &analysis.Analyzer{
+	Name: "nozerologmsgf",
+	Doc:  "Reports zerolog.Msgf usage after Error()",
 	Run:  msgfLintRun,
 }
 
 func New(conf any) ([]*analysis.Analyzer, error) {
-	return []*analysis.Analyzer{MsgfLintAnalyzer}, nil
+	return []*analysis.Analyzer{Analyzer}, nil
 }
 
 // Run function in the MsgfLintAnalyzer implementation.
@@ -45,7 +47,7 @@ func msgfLintRun(pass *analysis.Pass) (interface{}, error) {
 					pass.Report(analysis.Diagnostic{
 						Pos:     node.Pos(),
 						End:     node.End(),
-						Message: "Don't use zerolog.Msgf after Error(), use Msg() instead. Include extra context via Event fields.",
+						Message: ErrorMsg,
 					})
 				}
 			}
@@ -57,6 +59,7 @@ func msgfLintRun(pass *analysis.Pass) (interface{}, error) {
 	return nil, nil
 }
 
+// TODO: check for aliased or dot imports of zerolog
 // See if node is the .Msgf selector expression on a zerolog.Event.
 func isMsgfExprNode(pass *analysis.Pass, node ast.Node, underlyingReceiverType types.Type) (bool, *ast.SelectorExpr) {
 	// Look for method calls
